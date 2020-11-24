@@ -34,7 +34,7 @@ trait WorldState {
 
     /// Add a new account.
     fn create_account(&mut self, id: String, account_type: AccountType)
-        -> Result<(), &'static str>;
+                      -> Result<(), &'static str>;
 }
 
 /// One single part of the [Blockchain]. Contains a list of transactions and a
@@ -93,7 +93,7 @@ pub enum TransactionData {
 
 /// Represents an account on the [Blockchain]. This is the important part of
 /// the [WorldState] of the chain. The final state of each account is
-/// determined after processing all of the [Block]s and their [Transactions]s
+/// determined after processing all of the [Block]s and their [Transaction]s
 /// within.
 #[derive(Clone, Debug)]
 pub struct Account {
