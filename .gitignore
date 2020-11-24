@@ -1,1 +1,8 @@
 /target
+.idea
+*.iml
+.vscode
+.atom
+.DS_Store
+.env
+*.log
