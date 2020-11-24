@@ -36,9 +36,64 @@ trait WorldState {
     fn create_account(&mut self, id: String, account_type: AccountType) -> Result<(), &'static str>;
 }
 
-/// Represents an account on the blockchain. This is the important part of the
-/// [WorldState] of the chain. The final state of each account is determined
-/// after processing all of the [Block]s and their [Transactions]s within.
+/// One single part of the [Blockchain]. Contains a list of transactions and a
+/// hash.
+#[derive(Clone, Debug)]
+pub struct Block {
+    /// Actions that this block includes. There has to be at least one in the
+    /// block.
+    pub(crate) transactions: Vec<Transaction>,
+
+    /// Hash of the previous block, connecting them together.
+    prev_hash: Option<String>,
+
+    /// Hash of the current block. The hashed data includes the hash of the
+    /// previous block, building a chain which is resistant to tampering.
+    hash: Option<String>,
+
+    /// Some arbitrary number which will be used for PoW.
+    nonce: u128,
+}
+
+/// Stores an action to take place on the [Blockchain]. Part of a [Block].
+#[derive(Clone, Debug)]
+pub struct Transaction {
+    /// Unique number (prevents replay attacks).
+    nonce: u128,
+
+    /// Source account ID.
+    from: String,
+
+    /// Stores the time the transaction was created.
+    created_at: SystemTime,
+
+    /// The type of the transaction and it's additional information.
+    pub(crate) record: TransactionData,
+
+    /// Signature of the hash of the whole message.
+    signature: Option<String>,
+}
+
+/// The type of operation to take place on the [Blockchain].
+#[derive(Clone, Debug, PartialEq)]
+pub enum TransactionData {
+    /// Store a new [Account] on the chain.
+    CreateUserAccount(String),
+
+    /// Change or create an arbitrary value in an [Account].
+    ChangeStoreValue { key: String, value: String },
+
+    /// Move tokens from one [Account] to another.
+    TransferTokens { to: String, amount: u128 },
+
+    /// Create new tokens out of nowhere.
+    CreateTokens { receiver: String, amount: u128 },
+}
+
+/// Represents an account on the [Blockchain]. This is the important part of
+/// the [WorldState] of the chain. The final state of each account is
+/// determined after processing all of the [Block]s and their [Transactions]s
+/// within.
 #[derive(Clone, Debug)]
 pub struct Account {
     /// An account can store any information in a dictionary.
@@ -61,42 +116,3 @@ pub enum AccountType {
     /// An account which doesn't represent an individual, but a smart contract.
     Contract,
 }
-
-#[derive(Clone, Debug)]
-pub struct Block {
-    /// Actions that this block includes. There has to be at least one in the
-    /// block.
-    pub(crate) transactions: Vec<Transaction>,
-
-    /// Hash of the previous block, connecting them together.
-    prev_hash: Option<String>,
-
-    /// Hash of the current block. The hashed data includes the hash of the
-    /// previous block, building a chain which is resistant to tampering.
-    hash: Option<String>,
-
-    /// Some arbitrary number which will be used for PoW.
-    nonce: u128,
-}
-
-/// Stores an action to take place on the blockchain.
-#[derive(Clone, Debug)]
-pub struct Transaction {
-    /// Unique number (prevents replay attacks).
-    nonce: u128,
-
-    /// Source account ID.
-    from: String,
-
-    /// Stores the time the transaction was created.
-    created_at: SystemTime,
-
-    /// The type of the transaction and it's additional information.
-    pub(crate) record: TransactionData,
-
-    /// Signature of the hash of the whole message.
-    signature: Option<String>,
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub enum TransactionData {}
