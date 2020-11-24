@@ -33,7 +33,8 @@ trait WorldState {
     fn get_account_by_id(&self, id: &String) -> Option<&Account>;
 
     /// Add a new account.
-    fn create_account(&mut self, id: String, account_type: AccountType) -> Result<(), &'static str>;
+    fn create_account(&mut self, id: String, account_type: AccountType)
+        -> Result<(), &'static str>;
 }
 
 /// One single part of the [Blockchain]. Contains a list of transactions and a
