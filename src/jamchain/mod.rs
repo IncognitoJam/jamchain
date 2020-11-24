@@ -1,7 +1,8 @@
 use std::collections::HashMap;
+use std::time::SystemTime;
 
 /// The actual Blockchain container
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct Blockchain {
     /// Stores all the blocks which are accepted already within the blockchain.
     pub blocks: Vec<Block>,
@@ -42,8 +43,41 @@ pub struct Account;
 #[derive(Debug, Clone)]
 pub struct AccountType;
 
-#[derive(Debug, Clone)]
-pub struct Block;
+#[derive(Clone, Debug)]
+pub struct Block {
+    /// Actions that this block includes. There has to be at least one in the
+    /// block.
+    pub(crate) transactions: Vec<Transaction>,
 
-#[derive(Debug, Clone)]
-pub struct Transaction;
+    /// Hash of the previous block, connecting them together.
+    prev_hash: Option<String>,
+
+    /// Hash of the current block. The hashed data includes the hash of the
+    /// previous block, building a chain which is resistant to tampering.
+    hash: Option<String>,
+
+    /// Some arbitrary number which will be used for PoW.
+    nonce: u128,
+}
+
+/// Stores an action to take place on the blockchain.
+#[derive(Clone, Debug)]
+pub struct Transaction {
+    /// Unique number (prevents replay attacks).
+    nonce: u128,
+
+    /// Source account ID.
+    from: String,
+
+    /// Stores the time the transaction was created.
+    created_at: SystemTime,
+
+    /// The type of the transaction and it's additional information.
+    pub(crate) record: TransactionData,
+
+    /// Signature of the hash of the whole message.
+    signature: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum TransactionData {}
