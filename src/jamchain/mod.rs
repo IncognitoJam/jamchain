@@ -36,12 +36,31 @@ trait WorldState {
     fn create_account(&mut self, id: String, account_type: AccountType) -> Result<(), &'static str>;
 }
 
-/// TODO: complete definitions
-#[derive(Debug, Clone)]
-pub struct Account;
+/// Represents an account on the blockchain. This is the important part of the
+/// [WorldState] of the chain. The final state of each account is determined
+/// after processing all of the [Block]s and their [Transactions]s within.
+#[derive(Clone, Debug)]
+pub struct Account {
+    /// An account can store any information in a dictionary.
+    store: HashMap<String, String>,
 
-#[derive(Debug, Clone)]
-pub struct AccountType;
+    /// Is this a user account or something else.
+    acc_type: AccountType,
+
+    /// The amount of tokens the user has, like currency.
+    tokens: u128,
+}
+
+/// The chain can support different types of account which could be used to
+/// represent different roles in the system, like users, contracts or automated
+/// events by the chain itself.
+#[derive(Clone, Debug)]
+pub enum AccountType {
+    /// A common user account.
+    User,
+    /// An account which doesn't represent an individual, but a smart contract.
+    Contract,
+}
 
 #[derive(Clone, Debug)]
 pub struct Block {
