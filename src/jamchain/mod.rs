@@ -16,6 +16,16 @@ pub struct Blockchain {
     pending_transactions: Vec<Transaction>,
 }
 
+impl Blockchain {
+    pub fn new() -> Self {
+        Blockchain {
+            blocks: Vec::new(),
+            accounts: HashMap::new(),
+            pending_transactions: Vec::new(),
+        }
+    }
+}
+
 /// Represents the current state of the blockchain after all Blocks are
 /// executed. A world state is technically not necessary since we could always
 /// build the information by iterating through all the blocks. Generally, this
@@ -105,6 +115,16 @@ pub struct Account {
 
     /// The amount of tokens the user has, like currency.
     tokens: u128,
+}
+
+impl Account {
+    pub fn new(account_type: AccountType) -> Self {
+        return Account {
+            store: HashMap::new(),
+            acc_type: account_type,
+            tokens: 0,
+        };
+    }
 }
 
 /// The chain can support different types of account which could be used to
